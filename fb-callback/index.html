@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Phikat Phisadan Studio – Facebook login</title>
+<style>
+  body { font-family: system-ui, "Segoe UI", Tahoma, sans-serif; line-height: 1.7; color: #1b2433; background: #fff;
+         max-width: 640px; margin: 0 auto; padding: 48px 16px; text-align: center; }
+  h1 { font-size: 1.3rem; color: #101A2C; }
+  .sub { color: #5a6577; }
+  a.btn { display: inline-block; margin-top: 18px; padding: 12px 22px; border-radius: 10px; background: #0E8FA0; color: #fff;
+          text-decoration: none; font-weight: 700; }
+  #manual { display: none; }
+</style>
+</head>
+<body>
+<!-- Facebook sends the login result here (an https address it accepts even when the Meta app is Live); this page
+     hands it straight to the Phikat Phisadan Studio program running on this computer (127.0.0.1:8769). Nothing is
+     stored or sent anywhere else: no scripts or files from other sites are loaded on this page. -->
+<h1 id="title">กำลังส่งผลการล็อกอินกลับไปที่โปรแกรม…</h1>
+<p class="sub" id="note">Sending the Facebook login back to the Phikat Phisadan Studio program on this computer…</p>
+<div id="manual">
+  <a class="btn" id="go" href="#">กดที่นี่ถ้าหน้าไม่เปลี่ยนเอง / Continue</a>
+  <p class="sub">โปรแกรมต้องเปิดอยู่ และกด 🔗 เชื่อมต่อ Facebook ไว้ภายใน 5 นาทีที่ผ่านมา</p>
+</div>
+<script>
+(function () {
+  var p = new URLSearchParams(location.search);
+  // Meta may answer in the #fragment (implicit grant): turn it into query parameters the program can read
+  var h = new URLSearchParams(location.hash.replace(/^#/, ""));
+  h.forEach(function (v, k) { if (k !== "_" && !p.has(k)) p.set(k, v); });
+  var qs = p.toString();
+  if (!qs) {
+    document.getElementById("title").textContent = "หน้านี้ใช้รับการล็อกอิน Facebook ของโปรแกรมพิกัดพิสดาร Studio";
+    document.getElementById("note").textContent = "This page receives the Facebook login for the Phikat Phisadan Studio desktop program.";
+    return;
+  }
+  var target = "http://127.0.0.1:8769/callback/?" + qs;
+  document.getElementById("go").href = target;
+  document.getElementById("manual").style.display = "block";
+  history.replaceState(null, "", location.pathname);  // keep the one-time code out of the browser history
+  location.replace(target);
+})();
+</script>
+</body>
+</html>
